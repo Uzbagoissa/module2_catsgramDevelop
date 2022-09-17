@@ -38,4 +38,5 @@ public class Post {
     public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
     }
+    //1
 }
