@@ -12,6 +12,14 @@ public class User {
         return email;
     }
 
+    public String getNickname() {
+        return nickname;
+    }
+
+    public LocalDate getBirthdate() {
+        return birthdate;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -25,4 +33,5 @@ public class User {
     public int hashCode() {
         return Objects.hash(email);
     }
+
 }
