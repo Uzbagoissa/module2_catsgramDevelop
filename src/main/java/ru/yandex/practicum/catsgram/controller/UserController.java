@@ -9,38 +9,42 @@ import ru.yandex.practicum.catsgram.model.User;
 import javax.sound.midi.Soundbank;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
 
-    private final ArrayList<User> users = new ArrayList<>();
+    private final HashSet<User> users = new HashSet<>();
 
     @GetMapping()
-    public ArrayList<User> usersMap() {
+    public HashSet<User> usersMap() {
         return users;
     }
 
     @PostMapping()
-    public void postUser(@RequestBody User user) throws UserAlreadyExistException, InvalidEmailException {
+    public User postUser(@RequestBody User user) throws UserAlreadyExistException, InvalidEmailException {
         if (users.contains(user)){
             throw new UserAlreadyExistException("Пользователь уже был добавлен!");
         } else if (user.getEmail().equals("")){
             throw new InvalidEmailException("Отстутствует email пользователя!");
         } else {
             users.add(user);
+            return user;
         }
     }
 
     @PutMapping()
-    public void putUser(@RequestBody User user) throws InvalidEmailException {
+    public User putUser(@RequestBody User user) throws InvalidEmailException {
         if (user.getEmail().equals("")){
             throw new InvalidEmailException("Отстутствует email пользователя!");
         } else if(users.contains(user)) {
             users.add(user);
+            return user;
         } else {
             users.add(user);
+            return user;
         }
     }
 
