@@ -1,24 +1,17 @@
 package ru.yandex.practicum.catsgram.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDate;
 import java.util.Objects;
 
+@Getter
+@Setter
 public class User {
     private String email;
     private String nickname;
     private LocalDate birthdate;
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public LocalDate getBirthdate() {
-        return birthdate;
-    }
 
     @Override
     public boolean equals(Object obj) {
