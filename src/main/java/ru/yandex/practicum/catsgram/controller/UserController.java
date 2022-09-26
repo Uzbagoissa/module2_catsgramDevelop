@@ -40,6 +40,7 @@ public class UserController {
         if (user.getEmail().equals("")){
             throw new InvalidEmailException("Отстутствует email пользователя!");
         } else if(users.contains(user)) {
+            users.remove(user);
             users.add(user);
             return user;
         } else {
