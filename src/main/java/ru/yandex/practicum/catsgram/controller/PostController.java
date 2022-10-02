@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequestMapping("/posts")
 public class PostController {
     private final PostService postService;
 
@@ -17,18 +18,18 @@ public class PostController {
         this.postService = postService;
     }
 
-    @GetMapping("/posts")
+    @GetMapping()
     public List<Post> findAll() {
         return postService.findAll();
     }
 
-    @PostMapping(value = "/post")
+    @PostMapping()
     public Post create(@RequestBody Post post) {
         return postService.create(post);
     }
 
-    @GetMapping("/posts/{postId}")
-    public Optional<Post> findById(@PathVariable int postId) {
+    @GetMapping("/{postId}")
+    public Optional<Post> findById(@PathVariable("postId") int postId) {
         return postService.findById(postId);
     }
 }

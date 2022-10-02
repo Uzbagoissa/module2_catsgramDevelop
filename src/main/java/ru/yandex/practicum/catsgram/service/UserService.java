@@ -1,8 +1,10 @@
 package ru.yandex.practicum.catsgram.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import ru.yandex.practicum.catsgram.exception.InvalidEmailException;
 import ru.yandex.practicum.catsgram.exception.UserAlreadyExistException;
+import ru.yandex.practicum.catsgram.model.Post;
 import ru.yandex.practicum.catsgram.model.User;
 
 import java.util.*;
@@ -34,4 +36,23 @@ public class UserService {
         users.put(user.getEmail(), user);
         return user;
     }
+
+    //Вариант метода способом с обходом коллекции через поток
+    public Optional<User> findByEmail(String userEmail) {
+        return users.values().stream()
+                .filter(x -> x.getEmail().equals(userEmail))
+                .findFirst();
+    }
+
+    //Вариант метода обычным способом с обходом коллекции через цикл
+    /*public Optional<User> findByEmail(String userEmail) {
+        User x = null;
+        for (User value : users.values()) {
+            if (value.getEmail().equals(userEmail)){
+                x = value;
+                break;
+            }
+        }
+        return Optional.ofNullable(x);
+    }*/
 }

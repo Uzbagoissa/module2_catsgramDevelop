@@ -2,10 +2,12 @@ package ru.yandex.practicum.catsgram.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.catsgram.model.Post;
 import ru.yandex.practicum.catsgram.model.User;
 import ru.yandex.practicum.catsgram.service.UserService;
 
 import java.util.Collection;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
@@ -29,5 +31,10 @@ public class UserController {
     @PutMapping
     public User put(@RequestBody User user) {
         return userService.put(user);
+    }
+
+    @GetMapping("/{userEmail}")
+    public Optional<User> findByEmail(@PathVariable("userEmail") String userEmail) {
+        return userService.findByEmail(userEmail);
     }
 }
