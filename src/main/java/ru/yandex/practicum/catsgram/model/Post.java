@@ -9,6 +9,10 @@ public class Post {
     private String description; // описание
     private String photoUrl; // url-адрес фотографии
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public Post(Integer id, String author, String description, String photoUrl) {
         this.id = id;
         this.author = author;
