@@ -16,8 +16,13 @@ public class PostService {
     private final List<Post> posts = new ArrayList<>();
     int postID = 1;
 
+    public List<Post> getPosts() {
+        return posts;
+    }
+
     public List<Post> findAll(int size, int from, String sort) {
-        return posts.stream().sorted((p0, p1) -> {
+        return posts.stream()
+                .sorted((p0, p1) -> {
             int comp = p0.getCreationDate().compareTo(p1.getCreationDate()); //прямой порядок сортировки
             if(sort.equals("desc")){
                 comp = -1 * comp; //обратный порядок сортировки
@@ -41,6 +46,20 @@ public class PostService {
         return posts.stream()
                 .filter(x -> x.getId() == postId)
                 .findFirst();
+    }
+
+    public List<Post> findAllByUserEmail(String email, Integer size, String sort) {
+        return posts.stream()
+                .filter(p -> email.equals(p.getAuthor()))
+                .sorted((p0, p1) -> {
+            int comp = p0.getCreationDate().compareTo(p1.getCreationDate()); //прямой порядок сортировки
+            if(sort.equals("desc")){
+                comp = -1 * comp; //обратный порядок сортировки
+            }
+            return comp;
+        })
+                .limit(size)
+                .collect(Collectors.toList());
     }
 
     //Вариант метода обычным способом с обходом коллекции через цикл
