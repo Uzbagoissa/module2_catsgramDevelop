@@ -16,10 +16,6 @@ public class PostService {
     private final List<Post> posts = new ArrayList<>();
     int postID = 1;
 
-    public List<Post> getPosts() {
-        return posts;
-    }
-
     public List<Post> findAll(int size, int from, String sort) {
         return posts.stream()
                 .sorted((p0, p1) -> {
