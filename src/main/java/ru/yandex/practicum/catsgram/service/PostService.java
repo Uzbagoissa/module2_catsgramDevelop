@@ -1,72 +1,75 @@
 package ru.yandex.practicum.catsgram.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
+import ru.yandex.practicum.catsgram.exception.PostNotFoundException;
+import ru.yandex.practicum.catsgram.exception.UserNotFoundException;
 import ru.yandex.practicum.catsgram.model.Post;
+import ru.yandex.practicum.catsgram.model.User;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static ru.yandex.practicum.catsgram.Constants.DESCENDING_ORDER;
 
 @Service
 public class PostService {
+    private final UserService userService;
     private final List<Post> posts = new ArrayList<>();
-    int postID = 1;
 
-    public List<Post> findAll(int size, int from, String sort) {
+    private static Integer globalId = 0;
+
+    @Autowired
+    public PostService(UserService userService) {
+        this.userService = userService;
+    }
+
+    public Post create(Post post) {
+        User postAuthor = userService.findUserByEmail(post.getAuthor());
+        if (postAuthor == null) {
+            throw new UserNotFoundException(String.format(
+                    "Пользователь %s не найден",
+                    post.getAuthor()));
+        }
+
+        post.setId(getNextId());
+        posts.add(post);
+        return post;
+    }
+
+    public Post findPostById(Integer postId) {
         return posts.stream()
-                .sorted((p0, p1) -> {
-            int comp = p0.getCreationDate().compareTo(p1.getCreationDate()); //прямой порядок сортировки
-            if(sort.equals("desc")){
-                comp = -1 * comp; //обратный порядок сортировки
-            }
-            return comp;
-        })
+                .filter(p -> p.getId().equals(postId))
+                .findFirst()
+                .orElseThrow(() -> new PostNotFoundException(String.format("Пост № %d не найден", postId)));
+    }
+
+    public List<Post> findAll(Integer size, Integer from, String sort) {
+        return posts.stream()
+                .sorted((p0, p1) -> compare(p0, p1, sort))
                 .skip(from)
                 .limit(size)
                 .collect(Collectors.toList());
     }
 
-    public Post create(Post post) {
-        post.setId(postID);
-        posts.add(post);
-        postID++;
-        return post;
-    }
-
-    //Вариант метода способом с обходом коллекции через поток
-    public Optional<Post> findById(int postId) {
-        return posts.stream()
-                .filter(x -> x.getId() == postId)
-                .findFirst();
-    }
-
     public List<Post> findAllByUserEmail(String email, Integer size, String sort) {
         return posts.stream()
                 .filter(p -> email.equals(p.getAuthor()))
-                .sorted((p0, p1) -> {
-            int comp = p0.getCreationDate().compareTo(p1.getCreationDate()); //прямой порядок сортировки
-            if(sort.equals("desc")){
-                comp = -1 * comp; //обратный порядок сортировки
-            }
-            return comp;
-        })
+                .sorted((p0, p1) -> compare(p0, p1, sort))
                 .limit(size)
                 .collect(Collectors.toList());
     }
 
-    //Вариант метода обычным способом с обходом коллекции через цикл
-    /*public Optional<Post> findById(int postId) {
-        Post x = null;
-        for (int i = 0; i < posts.size(); i++) {
-            if (posts.get(i).getId() == postId){
-                x = posts.get(i);
-                break;
-            }
+    private static Integer getNextId() {
+        return globalId++;
+    }
+
+    private int compare(Post p0, Post p1, String sort) {
+        int result = p0.getCreationDate().compareTo(p1.getCreationDate()); //прямой порядок сортировки
+        if (sort.equals(DESCENDING_ORDER)) {
+            result = -1 * result; //обратный порядок сортировки
         }
-        return Optional.ofNullable(x);
-    }*/
+        return result;
+    }
 }
