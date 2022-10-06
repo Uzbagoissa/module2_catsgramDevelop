@@ -4,75 +4,61 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.yandex.practicum.catsgram.exception.*;
-import ru.yandex.practicum.catsgram.service.PostService;
-import ru.yandex.practicum.catsgram.service.UserService;
+import ru.yandex.practicum.catsgram.exception.IncorrectParameterException;
+import ru.yandex.practicum.catsgram.exception.InvalidEmailException;
+import ru.yandex.practicum.catsgram.exception.PostNotFoundException;
+import ru.yandex.practicum.catsgram.exception.UserAlreadyExistException;
+import ru.yandex.practicum.catsgram.exception.UserNotFoundException;
+import ru.yandex.practicum.catsgram.model.ErrorResponse;
 
-import java.util.Map;//
-
-@RestControllerAdvice(assignableTypes = {PostController.class, PostFeedController.class, UserController.class, UserService.class, PostService.class})
+@RestControllerAdvice
 public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> handle(final IncorrectParameterException e) {
-        return Map.of(
-                "error", "Чет там произошло",
-                "errorMessage", e.getMessage()
+    public ErrorResponse handleIncorrectParameterException(final IncorrectParameterException e) {
+        return new ErrorResponse(
+                String.format("Ошибка с полем \"%s\".", e.getParameter())
         );
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> handle(final InvalidEmailException e) {
-        return Map.of(
-                "error", "Адрес электронной почты не может быть пустым.",
-                "errorMessage", e.getMessage()
+    public ErrorResponse handleInvalidEmailException(final InvalidEmailException e) {
+        return new ErrorResponse(
+                e.getMessage()
         );
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, String> handle(final PostNotFoundException e) {
-        return Map.of(
-                "error", "Пост № %d не найден",
-                "errorMessage", e.getMessage()
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handlePostNotFoundException(final PostNotFoundException e) {
+        return new ErrorResponse(
+                e.getMessage()
+        );
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleUserNotFoundException(final UserNotFoundException e) {
+        return new ErrorResponse(
+                e.getMessage()
         );
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
-    public Map<String, String> handle(final UserAlreadyExistException e) {
-        return Map.of(
-                "error", "Пользователь с электронной почтой %s уже зарегистрирован.",
-                "errorMessage", e.getMessage()
+    public ErrorResponse handlePostNotFoundException(final UserAlreadyExistException e) {
+        return new ErrorResponse(
+                e.getMessage()
         );
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public Map<String, String> handle(final UserNotFoundException e) {
-        return Map.of(
-                "error", "Пользователь %s не найден",
-                "errorMessage", e.getMessage()
+    public ErrorResponse handleThrowable(final Throwable e) {
+        return new ErrorResponse(
+                "Произошла непредвиденная ошибка."
         );
-    }
-
-    public class ErrorResponse {
-        String error;
-        String description;
-
-        public ErrorResponse(String error, String description) {
-            this.error = error;
-            this.description = description;
-        }
-
-        public String getError() {
-            return error;
-        }
-
-        public String getDescription() {
-            return description;
-        }
     }
 }
