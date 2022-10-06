@@ -8,7 +8,7 @@ import ru.yandex.practicum.catsgram.exception.*;
 import ru.yandex.practicum.catsgram.service.PostService;
 import ru.yandex.practicum.catsgram.service.UserService;
 
-import java.util.Map;
+import java.util.Map;//
 
 @RestControllerAdvice(assignableTypes = {PostController.class, PostFeedController.class, UserController.class, UserService.class, PostService.class})
 public class ErrorHandler {
