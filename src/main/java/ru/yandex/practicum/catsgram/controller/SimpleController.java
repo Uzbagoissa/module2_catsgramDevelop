@@ -9,11 +9,9 @@ import java.util.Optional;
 @RestController
 public class SimpleController {
 
-
     private final HackCatService hackCatService;
 
     public SimpleController(HackCatService hackCatService){
-
         this.hackCatService = hackCatService;
     }
 
@@ -21,8 +19,7 @@ public class SimpleController {
     public Optional<String> doHack(){
                 return hackCatService.doHackNow()
                         .map(password -> "Ура! Пароль подобран: " + password)
-                        .or(() -> Optional.of("Не удалось подобрать пароль. "
-                                + " Проверьте состояние и настройки базы данных."));
+                        .or(() -> Optional.of("Не удалось подобрать пароль. Проверьте состояние и настройки базы данных."));
     }
 
     @GetMapping("/home")
