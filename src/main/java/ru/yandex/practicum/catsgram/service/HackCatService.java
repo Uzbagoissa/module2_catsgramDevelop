@@ -10,15 +10,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.postgresql.core.SqlCommandType.SELECT;
-
 @Service
 public class HackCatService {
 
-    private Logger log = LoggerFactory.getLogger(getClass());
-    public static final String JDBC_URL="jdbc:postgresql://127.0.0.1:5432/cats";
-    public static final String JDBC_USERNAME="kitty";
-    public static final String JDBC_DRIVER="org.postgresql.Driver";
+    private final Logger log = LoggerFactory.getLogger(getClass());
+    public static final String JDBC_URL = "jdbc:postgresql://127.0.0.1:5432/cats";
+    public static final String JDBC_USERNAME = "kitty";
+    public static final String JDBC_DRIVER = "org.postgresql.Driver";
 
     public void tryPassword(String jdbcPassword) {
         DriverManagerDataSource dataSourceConst = new DriverManagerDataSource();
@@ -29,6 +27,7 @@ public class HackCatService {
         JdbcTemplate jdbcTemplateConst = new JdbcTemplate(dataSourceConst);
         jdbcTemplateConst.execute("SELECT 1;");
     }
+
 
     public Optional<String> doHackNow() {
         List<String> catWordList = Arrays.asList("meow", "purr", "purrrrrr", "zzz");
@@ -42,4 +41,5 @@ public class HackCatService {
         }
         return Optional.empty();
     }
+
 }
