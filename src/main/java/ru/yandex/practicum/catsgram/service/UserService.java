@@ -32,7 +32,6 @@ public class UserService {
     public User updateUser(User user) {
         checkEmail(user);
         users.put(user.getEmail(), user);
-
         return user;
     }
 
