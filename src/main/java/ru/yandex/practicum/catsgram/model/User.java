@@ -1,6 +1,6 @@
 package ru.yandex.practicum.catsgram.model;
 
-public class User {//
+public class User {
 
     private String id;
 
@@ -8,7 +8,10 @@ public class User {//
 
     private String nickname;
 
-    public User() {
+    public User(String id, String username, String nickname) {
+        this.id = id;
+        this.username = username;
+        this.nickname = nickname;
     }
 
     public void setId(String id) {
