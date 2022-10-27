@@ -1,4 +1,4 @@
-package ru.yandex.practicum.catsgram.dao.impl;
+package ru.yandex.practicum.catsgram.impl;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
